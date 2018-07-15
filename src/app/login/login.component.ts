@@ -11,6 +11,9 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     returnUrl: string;
+    isTechLink = false;
+    token: string;
+
 
     constructor(
         private formBuilder: FormBuilder,
@@ -44,11 +47,22 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
+        this.loading = true;
+        console.log(' login client ');
+        this.isTechLink = true;
         this.authenticationService.login(this.f.username.value, this.f.password.value)
             .pipe(first())
             .subscribe(
-                data => {
-                    this.router.navigate([this.returnUrl]);
+                    // this.router.navigate([this.returnUrl]);
+                    tokenRes => {
+                      console.log('login succ tokenRes = ' + tokenRes);
+                      this.token = tokenRes;
+                      if (this.token) {
+                              alert(this.token);
+                              const link = document.getElementById('technion') as HTMLAnchorElement;
+                              link.href = 'http://simplex-smart3d.com/ces/tech/app-auth?token=' + this.token;
+                          document.getElementById('technion').click();
+                      }
                 },
                 error => {
                     this.alertService.error(error);
